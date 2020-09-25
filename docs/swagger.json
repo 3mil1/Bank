@@ -2701,8 +2701,10 @@
             }
           },
           "example": {
-            "username": "Emil.Värnomasing",
-            "password": "test"
+            "name": "John Doe",
+            "email": "John.doe@mail.com",
+            "password": "Password",
+            "repeat_password": "Password"
           }
         },
         "SessionResponse": {
@@ -2745,11 +2747,12 @@
           },
           "example": {
             "user": {
-              "userId": "23",
-              "username": "Emil.Värnomasing",
+              "_id": "5f6dd4991cba3a07887477e9",
+              "name": "John Doe",
+              "email": "john.doe@gmail.com",
               "token": "9f8e22760d6a96881f9450ce4fb82e27",
               "isAdmin": "1",
-              "name": "Emil Värnomasing"
+              "password": "$2b$10$c5M1DQ/VCkVQCM.gHoh9veD/BY34QyAXd8YTnPuVY910eUCWin9Me"
             }
           }
         },
