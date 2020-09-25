@@ -1,0 +1,2781 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Intranet API Documentation",
+      "description": "This is Intranet APi Documentation",
+      "contact": {
+        "email": "henno.taht@gmail.com"
+      },
+      "license": {
+        "name": "Apache 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+      },
+      "version": "1"
+    },
+    "servers": [
+      {
+        "url": "http://localhost/intranet/api"
+      },
+      {
+        "url": "http://kyyrix.diarainfra.com/api"
+      }
+    ],
+    "paths": {
+      "/sessions": {
+        "post": {
+          "tags": [
+            "sessions"
+          ],
+          "summary": "As an unauthenicated user can manage my user account",
+          "operationId": "register",
+          "requestBody": {
+            "description": "User credentials used for register",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SessionResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Missing username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing username or password"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Invalid username or password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "sessions"
+          ],
+          "summary": "Deletes a user session (log out)",
+          "parameters": [],
+          "responses": {
+            "204": {
+              "description": "User has been logged out and session has been deleted",
+              "content": {}
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/projects": {
+        "get": {
+          "summary": "Returns a list of projects for current user for given year",
+          "parameters": [
+            {
+              "in": "query",
+              "name": "year",
+              "schema": {
+                "type": "integer",
+                "example": 2017
+              },
+              "description": "Year to filter projects by. If not given, defaults to current year"
+            },
+            {
+              "in": "query",
+              "name": "user",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 23
+              },
+              "description": "Selected user"
+            }
+          ],
+          "tags": [
+            "projects"
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProjectsResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Missing username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing username or password"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing user token or invalid user token"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/salaries/projects": {
+        "get": {
+          "summary": "Returns a list of projects with salaries by month",
+          "parameters": [
+            {
+              "in": "query",
+              "name": "year",
+              "schema": {
+                "type": "string",
+                "example": 2016
+              },
+              "description": "Year to filter projects by. If not given, defaults to current year"
+            },
+            {
+              "in": "query",
+              "name": "user_id",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 23
+              },
+              "description": "Selected user"
+            }
+          ],
+          "tags": [
+            "salaries"
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SalariesProjectsResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Returned no salaries",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Returned no salaries"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing user token or invalid user token"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/salaries/timesheets": {
+        "get": {
+          "summary": "Returns a single timesheet for given year and month",
+          "tags": [
+            "salaries"
+          ],
+          "parameters": [
+            {
+              "in": "query",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 52
+              },
+              "description": "Selected timesheet"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SalariesTimesheetResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Missing username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing username or password"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing user token or invalid user token"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Forbidden"
+                  }
+                }
+              }
+            },
+            "428": {
+              "description": "Precondition Required",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Salary fund or work days is undefined"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/salaries/projects/{id}/edit": {
+        "get": {
+          "summary": "Returns a single timesheet for given year and month",
+          "tags": [
+            "salaries"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 92
+              },
+              "description": "Selected project"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SalariesProjectEditResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Missing username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing username or password"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing user token or invalid user token"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "summary": "Update projects information",
+          "tags": [
+            "salaries"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 92
+              },
+              "description": "Selected project"
+            }
+          ],
+          "requestBody": {
+            "description": "Changed work days or employee or salary fund",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalariesProjectsEditUpdate"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "400": {
+              "description": "Missing username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing username or password"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing user token or invalid user token"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/salaries/timesheets/update": {
+        "post": {
+          "summary": "Update employees worked days",
+          "tags": [
+            "salaries"
+          ],
+          "parameters": [
+            {
+              "in": "query",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 52
+              },
+              "description": "Selected timesheet"
+            }
+          ],
+          "requestBody": {
+            "description": "Changed day, day value and employee id",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalariesTimesheetsUpdate"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "400": {
+              "description": "Missing username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing username or password"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing user token or invalid user token"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Forbidden"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Salary fund limit exceeded",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Salary fund limit exceeded"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/salaries/timesheets/{timesheetId}/employees/{employeeId}": {
+        "get": {
+          "summary": "Adds selected employee to selected timesheet",
+          "tags": [
+            "salaries"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "timesheetId",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 52
+              },
+              "description": "Timesheet"
+            },
+            {
+              "in": "path",
+              "name": "employeeId",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 35
+              },
+              "description": "Selected employee"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "400": {
+              "description": "Missing username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing username or password"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing user token or invalid user token"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "summary": "Deletes selected employee from selected timesheet",
+          "tags": [
+            "salaries"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "timesheetId",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 52
+              },
+              "description": "Timesheet"
+            },
+            {
+              "in": "path",
+              "name": "employeeId",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 35
+              },
+              "description": "Delete employee"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "400": {
+              "description": "Missing username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing username or password"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing user token or invalid user token"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/salaries/projects/timesheet/create": {
+        "post": {
+          "summary": "Create new timesheet",
+          "tags": [
+            "salaries"
+          ],
+          "requestBody": {
+            "description": "Changed day, day value and employee id",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalariesTimesheetCreate"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SalariesTimesheetCreateResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Missing username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing username or password"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing user token or invalid user token"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Forbidden"
+                  }
+                }
+              }
+            },
+            "428": {
+              "description": "Precondition Required",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Salary fund or work days is undefined"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/projects/{projectId}": {
+        "get": {
+          "summary": "Returns a single project for given year",
+          "tags": [
+            "projects"
+          ],
+          "parameters": [
+            {
+              "in": "query",
+              "name": "user",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 23
+              },
+              "description": "Selected user"
+            },
+            {
+              "name": "projectId",
+              "in": "path",
+              "description": "ID of project to return",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int64",
+                "example": 92
+              }
+            },
+            {
+              "in": "query",
+              "name": "year",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 2017
+              },
+              "description": "Year of the project"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ProjectResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Missing username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing username or password"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing user token or invalid user token"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/projects/{projectId}/transactions/{accountCode}/": {
+        "get": {
+          "summary": "Returns transactions for specified actions",
+          "tags": [
+            "projects"
+          ],
+          "parameters": [
+            {
+              "name": "projectId",
+              "in": "path",
+              "description": "ID of project to return",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "format": "int64",
+                "example": 92
+              }
+            },
+            {
+              "name": "accountCode",
+              "in": "path",
+              "description": "Code of the account to filter transactions by",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "format": "string",
+                "example": 4003
+              }
+            },
+            {
+              "in": "query",
+              "name": "year",
+              "schema": {
+                "type": "integer",
+                "example": 2017
+              },
+              "description": "Year to filter transactions by"
+            },
+            {
+              "in": "query",
+              "name": "month",
+              "schema": {
+                "type": "integer",
+                "example": 7
+              },
+              "description": "Month to filter transactions by"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TransactionsResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Missing username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing username or password"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing user token or invalid user token"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      },
+      "/assets": {
+        "get": {
+          "summary": "Returns foreman's assets",
+          "tags": [
+            "assets"
+          ],
+          "parameters": [
+            {
+              "in": "query",
+              "name": "user",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "example": 23
+              },
+              "description": "Selected user"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AssetsResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Missing username or password",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing username or password"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Missing user token or invalid user token"
+                  }
+                }
+              }
+            },
+            "403": {
+              "description": "Forbidden",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  },
+                  "example": {
+                    "error": "Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "TransactionsResponse": {
+          "required": [
+            "transactions",
+            "project",
+            "accountMonthSums"
+          ],
+          "type": "object",
+          "properties": {
+            "transactions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "documentNumber": {
+                    "type": "integer"
+                  },
+                  "sourceDocumentNumber": {
+                    "type": "string"
+                  },
+                  "documentDate": {
+                    "type": "string"
+                  },
+                  "transactionDate": {
+                    "type": "string"
+                  },
+                  "companyName": {
+                    "type": "string"
+                  },
+                  "foremanName": {
+                    "type": "string"
+                  },
+                  "accountType": {
+                    "type": "string"
+                  },
+                  "amountBase": {
+                    "type": "number",
+                    "format": "float"
+                  },
+                  "totalAmount": {
+                    "type": "number",
+                    "format": "float"
+                  },
+                  "accountCode": {
+                    "type": "string"
+                  },
+                  "accountName": {
+                    "type": "string"
+                  },
+                  "isOwner": {
+                    "type": "integer"
+                  },
+                  "isOK": {
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "project": {
+              "type": "object",
+              "properties": {
+                "projectId": {
+                  "type": "integer"
+                },
+                "projectName": {
+                  "type": "string"
+                },
+                "projectCode": {
+                  "type": "string"
+                }
+              }
+            },
+            "accountMonthSums": {
+              "type": "object",
+              "properties": {
+                "amountBase": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "totalAmount": {
+                  "type": "number",
+                  "format": "float"
+                }
+              }
+            }
+          },
+          "example": {
+            "transactions": [
+              {
+                "documentNumber": "9190",
+                "sourceDocumentNumber": "1383",
+                "documentDate": "1990-11-09",
+                "transactionDate": "2017-07-30",
+                "companyName": "Windler PLC",
+                "foremanName": "Geraldine Moen",
+                "accountType": "tulu",
+                "amountBase": "1231",
+                "totalAmount": "102108.406",
+                "accountCode": "69",
+                "accountName": "olmi",
+                "isOwner": "1",
+                "isOK": "1"
+              }
+            ],
+            "project": {
+              "projectId": "1",
+              "projectName": "minima",
+              "projectCode": "1004"
+            },
+            "totalSums": {
+              "amountBase": 1231,
+              "totalAmount": 102108.406
+            }
+          }
+        },
+        "AssetsResponse": {
+          "type": "object",
+          "properties": {
+            "assets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "basicAssetId": {
+                    "type": "integer"
+                  },
+                  "employee": {
+                    "type": "string"
+                  },
+                  "employeeCode": {
+                    "type": "integer"
+                  },
+                  "assetCode": {
+                    "type": "integer"
+                  },
+                  "assetName": {
+                    "type": "string"
+                  },
+                  "assetDesc": {
+                    "type": "string"
+                  },
+                  "projectName": {
+                    "type": "string"
+                  },
+                  "projectCode": {
+                    "type": "integer"
+                  },
+                  "depreciationRate": {
+                    "type": "integer"
+                  },
+                  "articleCode": {
+                    "type": "integer"
+                  },
+                  "chargeTo": {
+                    "type": "integer"
+                  },
+                  "docDate": {
+                    "type": "integer"
+                  },
+                  "quantity": {
+                    "type": "integer"
+                  },
+                  "basicCostBase": {
+                    "type": "integer"
+                  },
+                  "amount": {
+                    "type": "integer"
+                  },
+                  "amountBase": {
+                    "type": "integer"
+                  },
+                  "amountYearBase": {
+                    "type": "integer"
+                  },
+                  "amountMonthBase": {
+                    "type": "integer"
+                  },
+                  "IDCPREPORT": {
+                    "type": "integer"
+                  },
+                  "accountCode": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "example": {
+            "assets": [
+              {
+                "basicAssetId": "151",
+                "employee": "Tatjana Volkov",
+                "employeeCode": "210",
+                "assetCode": "812",
+                "assetName": "Skoda Fabia 985 MPX",
+                "assetDesc": "",
+                "projectName": "Tatjana Volkov TJ kulud",
+                "projectCode": "210",
+                "depreciationRate": "20.0",
+                "articleCode": "902244",
+                "chargeTo": "2016-10-13",
+                "docDate": "2021-11-30",
+                "quantity": "1",
+                "basicCostBase": "12689.00",
+                "amount": "4045.00",
+                "amountBase": "4045.00",
+                "amountYearBase": "2538.00",
+                "amountMonthBase": "211.00",
+                "IDCPREPORT": "47",
+                "accountCode": "6024"
+              }
+            ]
+          }
+        },
+        "ProjectResponse": {
+          "required": [
+            "project"
+          ],
+          "type": "object",
+          "properties": {
+            "project": {
+              "properties": {
+                "projectName": {
+                  "type": "string"
+                },
+                "projectCode": {
+                  "type": "string"
+                },
+                "year": {
+                  "type": "integer"
+                },
+                "accountGroups": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "revenue"
+                    ],
+                    "properties": {
+                      "revenue": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "accounts": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "code": {
+                                  "type": "integer"
+                                },
+                                "accountMonthSums": {
+                                  "type": "object",
+                                  "properties": {
+                                    "m1": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m2": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m3": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m4": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m5": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m6": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m7": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m8": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m9": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m10": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m11": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m12": {
+                                      "type": "number",
+                                      "format": "float"
+                                    }
+                                  }
+                                },
+                                "transactionCounts": {
+                                  "type": "object",
+                                  "properties": {
+                                    "c1": {
+                                      "type": "integer"
+                                    },
+                                    "c2": {
+                                      "type": "integer"
+                                    },
+                                    "c3": {
+                                      "type": "integer"
+                                    },
+                                    "c4": {
+                                      "type": "integer"
+                                    },
+                                    "c5": {
+                                      "type": "integer"
+                                    },
+                                    "c6": {
+                                      "type": "integer"
+                                    },
+                                    "c7": {
+                                      "type": "integer"
+                                    },
+                                    "c8": {
+                                      "type": "integer"
+                                    },
+                                    "c9": {
+                                      "type": "integer"
+                                    },
+                                    "c10": {
+                                      "type": "integer"
+                                    },
+                                    "c11": {
+                                      "type": "integer"
+                                    },
+                                    "c12": {
+                                      "type": "integer"
+                                    }
+                                  }
+                                },
+                                "totalSum": {
+                                  "type": "number",
+                                  "format": "float"
+                                }
+                              }
+                            }
+                          },
+                          "accountMonthSums": {
+                            "type": "object",
+                            "properties": {
+                              "m1": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m2": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m3": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m4": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m5": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m6": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m7": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m8": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m9": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m10": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m11": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m12": {
+                                "type": "number",
+                                "format": "float"
+                              }
+                            }
+                          },
+                          "transactionCounts": {
+                            "type": "object",
+                            "properties": {
+                              "c1": {
+                                "type": "integer"
+                              },
+                              "c2": {
+                                "type": "integer"
+                              },
+                              "c3": {
+                                "type": "integer"
+                              },
+                              "c4": {
+                                "type": "integer"
+                              },
+                              "c5": {
+                                "type": "integer"
+                              },
+                              "c6": {
+                                "type": "integer"
+                              },
+                              "c7": {
+                                "type": "integer"
+                              },
+                              "c8": {
+                                "type": "integer"
+                              },
+                              "c9": {
+                                "type": "integer"
+                              },
+                              "c10": {
+                                "type": "integer"
+                              },
+                              "c11": {
+                                "type": "integer"
+                              },
+                              "c12": {
+                                "type": "integer"
+                              }
+                            }
+                          },
+                          "totalSum": {
+                            "type": "number",
+                            "format": "float"
+                          }
+                        }
+                      },
+                      "expense1": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "accounts": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "code": {
+                                  "type": "integer"
+                                },
+                                "accountMonthSums": {
+                                  "type": "object",
+                                  "properties": {
+                                    "m1": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m2": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m3": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m4": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m5": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m6": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m7": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m8": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m9": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m10": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m11": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "m12": {
+                                      "type": "number",
+                                      "format": "float"
+                                    }
+                                  }
+                                },
+                                "transactionCounts": {
+                                  "type": "object",
+                                  "properties": {
+                                    "c1": {
+                                      "type": "integer"
+                                    },
+                                    "c2": {
+                                      "type": "integer"
+                                    },
+                                    "c3": {
+                                      "type": "integer"
+                                    },
+                                    "c4": {
+                                      "type": "integer"
+                                    },
+                                    "c5": {
+                                      "type": "integer"
+                                    },
+                                    "c6": {
+                                      "type": "integer"
+                                    },
+                                    "c7": {
+                                      "type": "integer"
+                                    },
+                                    "c8": {
+                                      "type": "integer"
+                                    },
+                                    "c9": {
+                                      "type": "integer"
+                                    },
+                                    "c10": {
+                                      "type": "integer"
+                                    },
+                                    "c11": {
+                                      "type": "integer"
+                                    },
+                                    "c12": {
+                                      "type": "integer"
+                                    }
+                                  }
+                                },
+                                "totalSum": {
+                                  "type": "number",
+                                  "format": "float"
+                                }
+                              }
+                            }
+                          },
+                          "accountMonthSums": {
+                            "type": "object",
+                            "properties": {
+                              "m1": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m2": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m3": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m4": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m5": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m6": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m7": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m8": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m9": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m10": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m11": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "m12": {
+                                "type": "number",
+                                "format": "float"
+                              }
+                            }
+                          },
+                          "transactionCounts": {
+                            "type": "object",
+                            "properties": {
+                              "c1": {
+                                "type": "integer"
+                              },
+                              "c2": {
+                                "type": "integer"
+                              },
+                              "c3": {
+                                "type": "integer"
+                              },
+                              "c4": {
+                                "type": "integer"
+                              },
+                              "c5": {
+                                "type": "integer"
+                              },
+                              "c6": {
+                                "type": "integer"
+                              },
+                              "c7": {
+                                "type": "integer"
+                              },
+                              "c8": {
+                                "type": "integer"
+                              },
+                              "c9": {
+                                "type": "integer"
+                              },
+                              "c10": {
+                                "type": "integer"
+                              },
+                              "c11": {
+                                "type": "integer"
+                              },
+                              "c12": {
+                                "type": "integer"
+                              }
+                            }
+                          },
+                          "totalSum": {
+                            "type": "number",
+                            "format": "float"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "margins": {
+                  "type": "object",
+                  "properties": {
+                    "expense1": {
+                      "type": "object",
+                      "properties": {
+                        "accountMonthSums": {
+                          "type": "object",
+                          "properties": {
+                            "m1": {
+                              "type": "number",
+                              "format": "float"
+                            },
+                            "m2": {
+                              "type": "number",
+                              "format": "float"
+                            },
+                            "m3": {
+                              "type": "number",
+                              "format": "float"
+                            },
+                            "m4": {
+                              "type": "number",
+                              "format": "float"
+                            },
+                            "m5": {
+                              "type": "number",
+                              "format": "float"
+                            },
+                            "m6": {
+                              "type": "number",
+                              "format": "float"
+                            },
+                            "m7": {
+                              "type": "number",
+                              "format": "float"
+                            },
+                            "m8": {
+                              "type": "number",
+                              "format": "float"
+                            },
+                            "m9": {
+                              "type": "number",
+                              "format": "float"
+                            },
+                            "m10": {
+                              "type": "number",
+                              "format": "float"
+                            },
+                            "m11": {
+                              "type": "number",
+                              "format": "float"
+                            },
+                            "m12": {
+                              "type": "number",
+                              "format": "float"
+                            }
+                          }
+                        },
+                        "totalSum": {
+                          "type": "number",
+                          "format": "float"
+                        }
+                      }
+                    }
+                  }
+                },
+                "expenses": {
+                  "type": "object",
+                  "properties": {
+                    "accountMonthSums": {
+                      "type": "object",
+                      "properties": {
+                        "m1": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m2": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m3": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m4": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m5": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m6": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m7": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m8": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m9": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m10": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m11": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m12": {
+                          "type": "number",
+                          "format": "float"
+                        }
+                      }
+                    },
+                    "totalSum": {
+                      "type": "number",
+                      "format": "float"
+                    }
+                  }
+                },
+                "totals": {
+                  "type": "object",
+                  "properties": {
+                    "accountMonthSums": {
+                      "type": "object",
+                      "properties": {
+                        "m1": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m2": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m3": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m4": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m5": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m6": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m7": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m8": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m9": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m10": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m11": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "m12": {
+                          "type": "number",
+                          "format": "float"
+                        }
+                      }
+                    },
+                    "totalSum": {
+                      "type": "number",
+                      "format": "float"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "example": {
+            "project": {
+              "projectName": "minima",
+              "projectCode": "1004",
+              "year": "2017",
+              "accountGroups": {
+                "revenue": {
+                  "accountGroupName": "revenue",
+                  "accounts": [
+                    {
+                      "accountName": "olmi",
+                      "accountCode": "69",
+                      "accountMonthSums": {
+                        "m1": 0,
+                        "m2": 0,
+                        "m3": 0,
+                        "m4": 0,
+                        "m5": 0,
+                        "m6": 0,
+                        "m7": 1231,
+                        "m8": 0,
+                        "m9": 0,
+                        "m10": 0,
+                        "m11": 0,
+                        "m12": 0
+                      },
+                      "transactionCounts": {
+                        "c1": "0",
+                        "c2": "0",
+                        "c3": "0",
+                        "c4": "0",
+                        "c5": "0",
+                        "c6": "0",
+                        "c7": "1",
+                        "c8": "0",
+                        "c9": "0",
+                        "c10": "0",
+                        "c11": "0",
+                        "c12": "0"
+                      },
+                      "totalSum": 1231
+                    }
+                  ],
+                  "accountMonthSums": {
+                    "m1": 0,
+                    "m2": 0,
+                    "m3": 0,
+                    "m4": 0,
+                    "m5": 0,
+                    "m6": 0,
+                    "m7": 1231,
+                    "m8": 0,
+                    "m9": 0,
+                    "m10": 0,
+                    "m11": 0,
+                    "m12": 0
+                  },
+                  "transactionCounts": {
+                    "c1": 0,
+                    "c2": 0,
+                    "c3": 0,
+                    "c4": 0,
+                    "c5": 0,
+                    "c6": 0,
+                    "c7": 1,
+                    "c8": 0,
+                    "c9": 0,
+                    "c10": 0,
+                    "c11": 0,
+                    "c12": 0
+                  },
+                  "totalSum": 1231
+                },
+                "expense1": {
+                  "accountGroupName": "expense1",
+                  "accounts": [
+                    {
+                      "accountName": "odio",
+                      "accountCode": "68",
+                      "accountMonthSums": {
+                        "m1": 0,
+                        "m2": 0,
+                        "m3": 0,
+                        "m4": 0,
+                        "m5": 0,
+                        "m6": 0,
+                        "m7": -28293.07,
+                        "m8": 0,
+                        "m9": 0,
+                        "m10": 0,
+                        "m11": 0,
+                        "m12": 0
+                      },
+                      "transactionCounts": {
+                        "c1": "0",
+                        "c2": "0",
+                        "c3": "0",
+                        "c4": "0",
+                        "c5": "0",
+                        "c6": "0",
+                        "c7": "1",
+                        "c8": "0",
+                        "c9": "0",
+                        "c10": "0",
+                        "c11": "0",
+                        "c12": "0"
+                      },
+                      "totalSum": -28293.07
+                    }
+                  ],
+                  "accountMonthSums": {
+                    "m1": 0,
+                    "m2": 0,
+                    "m3": 0,
+                    "m4": 0,
+                    "m5": 0,
+                    "m6": 0,
+                    "m7": -28293.07,
+                    "m8": 0,
+                    "m9": 0,
+                    "m10": 0,
+                    "m11": 0,
+                    "m12": 0
+                  },
+                  "transactionCounts": {
+                    "c1": 0,
+                    "c2": 0,
+                    "c3": 0,
+                    "c4": 0,
+                    "c5": 0,
+                    "c6": 0,
+                    "c7": 1,
+                    "c8": 0,
+                    "c9": 0,
+                    "c10": 0,
+                    "c11": 0,
+                    "c12": 0
+                  },
+                  "totalSum": -28293.07
+                }
+              },
+              "margins": {
+                "expense1": {
+                  "accountMonthSums": {
+                    "m1": 0,
+                    "m2": 0,
+                    "m3": 0,
+                    "m4": 0,
+                    "m5": 0,
+                    "m6": 0,
+                    "m7": -27062.07,
+                    "m8": 0,
+                    "m9": 0,
+                    "m10": 0,
+                    "m11": 0,
+                    "m12": 0
+                  },
+                  "totalSum": -27062.07
+                }
+              },
+              "expenses": {
+                "accountMonthSums": {
+                  "m1": 0,
+                  "m2": 0,
+                  "m3": 0,
+                  "m4": 0,
+                  "m5": 0,
+                  "m6": 0,
+                  "m7": -28293.07,
+                  "m8": 0,
+                  "m9": 0,
+                  "m10": 0,
+                  "m11": 0,
+                  "m12": 0
+                },
+                "totalSum": -28293.07
+              },
+              "totals": {
+                "accountMonthSums": {
+                  "m1": 0,
+                  "m2": 0,
+                  "m3": 0,
+                  "m4": 0,
+                  "m5": 0,
+                  "m6": 0,
+                  "m7": -27062.07,
+                  "m8": 0,
+                  "m9": 0,
+                  "m10": 0,
+                  "m11": 0,
+                  "m12": 0
+                },
+                "totalSum": -27062.07
+              }
+            }
+          }
+        },
+        "SalariesProjectsResponse": {
+          "required": [
+            "salaries"
+          ],
+          "type": "object",
+          "properties": {
+            "projectId": {
+              "type": "integer"
+            },
+            "projectName": {
+              "type": "string"
+            },
+            "projectCode": {
+              "type": "string"
+            },
+            "employeeName": {
+              "type": "string"
+            },
+            "employeeCode": {
+              "type": "string"
+            },
+            "months": {
+              "type": "object",
+              "properties": {
+                "timesheetId": {
+                  "type": "number"
+                },
+                "salaryFund": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "example": {
+            "90": {
+              "projectName": "Tatjana Volkov TJ kulud",
+              "projectCode": "210",
+              "foremanName": "Tatjana Volkov",
+              "foremanCode": "210",
+              "months": []
+            },
+            "92": {
+              "projectName": "Andrejeva LLC",
+              "projectCode": "1065",
+              "foremanName": "Tatjana Volkov",
+              "foremanCode": "210",
+              "months": {
+                "1": {
+                  "salaryFund": "350",
+                  "timesheetId": "52"
+                }
+              }
+            },
+            "93": {
+              "projectName": "Kaasik and Sons",
+              "projectCode": "1066",
+              "foremanName": "Tatjana Volkov",
+              "foremanCode": "210",
+              "months": []
+            },
+            "94": {
+              "projectName": "JÃ¤rve-Rootare",
+              "projectCode": "1067",
+              "foremanName": "Tatjana Volkov",
+              "foremanCode": "210",
+              "months": []
+            }
+          }
+        },
+        "SalariesProjectEditResponse": {
+          "required": [
+            "salaries"
+          ],
+          "properties": {
+            "projectCode": {
+              "type": "string"
+            },
+            "projectName": {
+              "type": "string"
+            },
+            "salaryFund": {
+              "type": "string"
+            },
+            "employeeName": {
+              "type": "string"
+            },
+            "employeeId": {
+              "type": "string"
+            },
+            "employeeCode": {
+              "type": "string"
+            },
+            "workDays": {
+              "type": "array"
+            },
+            "currentForeman": {
+              "type": "object",
+              "properties": {
+                "foremanName": {
+                  "type": "string"
+                },
+                "foremanId": {
+                  "type": "string"
+                },
+                "foremanResponsibilityEndDate": {
+                  "type": "string"
+                },
+                "foremanResponsibilityStartDate": {
+                  "type": "string"
+                }
+              }
+            },
+            "foremen": {
+              "type": "object",
+              "properties": {
+                "foremanName": {
+                  "type": "string"
+                },
+                "foremanId": {
+                  "type": "string"
+                },
+                "foremanResponsibilityEndDate": {
+                  "type": "string"
+                },
+                "foremanResponsibilityStartDate": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "example": {
+            "projectCode": "1065",
+            "projectName": "Andrejeva LLC",
+            "workDays": [
+              0,
+              1,
+              2,
+              3,
+              5,
+              6
+            ],
+            "currentForeman": {
+              "foremanName": "Tatjana Volkov",
+              "foremanId": "663",
+              "foremanResponsibilityEndDate": "9999-12-30",
+              "foremanResponsibilityStartDate": "2016-10-01"
+            },
+            "salaryFund": "350",
+            "employeeName": "Markus KÃ¤bin",
+            "employeeId": "11",
+            "employeeCode": "0410",
+            "foremen": [
+              {
+                "foremanName": "Tatjana Volkov",
+                "foremanId": "663",
+                "foremanResponsibilityEndDate": "9999-12-30",
+                "foremanResponsibilityStartDate": "2016-10-01"
+              }
+            ]
+          }
+        },
+        "SalariesProjectsEditUpdate": {
+          "required": [
+            "dayValue",
+            "dayNumber",
+            "employeeId"
+          ],
+          "type": "object",
+          "properties": {
+            "workDays": {
+              "type": "array"
+            },
+            "salaryFund": {
+              "type": "string"
+            },
+            "employeeId": {
+              "type": "string"
+            }
+          },
+          "example": {
+            "workDays":[0,1,2,5,6],
+            "employeeId": "10",
+            "salaryFund":"3500"
+          }
+        },
+        "SalariesTimesheetsUpdate": {
+          "required": [
+            "dayValue",
+            "dayNumber",
+            "employeeId"
+          ],
+          "type": "object",
+          "properties": {
+            "dayValue": {
+              "type": "boolean"
+            },
+            "dayNumber": {
+              "type": "string"
+            },
+            "employeeId": {
+              "type": "string"
+            }
+          },
+          "example": {
+            "dayNumber": "7",
+            "employeeId": "10",
+            "dayValue": true
+          }
+        },
+        "SalariesTimesheetResponse": {
+          "required": [
+            "salaries"
+          ],
+          "properties": {
+            "projectId": {
+              "type": "string"
+            },
+            "projectName": {
+              "type": "string"
+            },
+            "salaryFund": {
+              "type": "string"
+            },
+            "defaultEmployee": {
+              "type": "string"
+            },
+            "year": {
+              "type": "string"
+            },
+            "month": {
+              "type": "string"
+            },
+            "workDays": {
+              "type": "array"
+            },
+            "holidays": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string"
+                }
+              }
+            },
+            "employees": {
+              "type": "object",
+              "properties": {
+                "employeeName": {
+                  "type": "string"
+                },
+                "employeeCode": {
+                  "type": "string"
+                },
+                "employeeId": {
+                  "type": "string"
+                },
+                "days": {
+                  "type": "object",
+                  "properties": {
+                    "1": {
+                      "type": "string"
+                    },
+                    "2": {
+                      "type": "string"
+                    },
+                    "3": {
+                      "type": "string"
+                    },
+                    "4": {
+                      "type": "string"
+                    },
+                    "5": {
+                      "type": "string"
+                    },
+                    "6": {
+                      "type": "string"
+                    },
+                    "7": {
+                      "type": "string"
+                    },
+                    "8": {
+                      "type": "string"
+                    },
+                    "9": {
+                      "type": "string"
+                    },
+                    "10": {
+                      "type": "string"
+                    },
+                    "11": {
+                      "type": "string"
+                    },
+                    "12": {
+                      "type": "string"
+                    },
+                    "13": {
+                      "type": "string"
+                    },
+                    "14": {
+                      "type": "string"
+                    },
+                    "15": {
+                      "type": "string"
+                    },
+                    "16": {
+                      "type": "string"
+                    },
+                    "17": {
+                      "type": "string"
+                    },
+                    "18": {
+                      "type": "string"
+                    },
+                    "19": {
+                      "type": "string"
+                    },
+                    "20": {
+                      "type": "string"
+                    },
+                    "21": {
+                      "type": "string"
+                    },
+                    "22": {
+                      "type": "string"
+                    },
+                    "23": {
+                      "type": "string"
+                    },
+                    "24": {
+                      "type": "string"
+                    },
+                    "25": {
+                      "type": "string"
+                    },
+                    "26": {
+                      "type": "string"
+                    },
+                    "27": {
+                      "type": "string"
+                    },
+                    "28": {
+                      "type": "string"
+                    },
+                    "29": {
+                      "type": "string"
+                    },
+                    "30": {
+                      "type": "string"
+                    },
+                    "31": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "example": {
+            "workDays": [
+              0,
+              1,
+              2,
+              3,
+              5,
+              6
+            ],
+            "projectId": "92",
+            "holidays": {
+              "1": "uusaasta"
+            },
+            "month": "1",
+            "year": "2020",
+            "salaryFund": "350",
+            "projectName": "Andrejeva LLC",
+            "defaultEmployee": "11",
+            "employees": {
+              "10": {
+                "employeeName": "Raivo Kirsipuu",
+                "employeeCode": "0710",
+                "employeeId": "10",
+                "days": {
+                  "1": "0",
+                  "2": "1",
+                  "3": "1",
+                  "4": "1",
+                  "5": "1",
+                  "6": "1",
+                  "7": "0",
+                  "8": "0",
+                  "9": "0",
+                  "10": "1",
+                  "11": "1",
+                  "12": "1",
+                  "13": "1",
+                  "14": "0",
+                  "15": "0",
+                  "16": "0",
+                  "17": "1",
+                  "18": "1",
+                  "19": "1",
+                  "20": "1",
+                  "21": "0",
+                  "22": "0",
+                  "23": "0",
+                  "24": "1",
+                  "25": "1",
+                  "26": "1",
+                  "27": "1",
+                  "28": "0",
+                  "29": "0",
+                  "30": "0",
+                  "31": "1"
+                }
+              }
+            },
+            "salaryFundSpent": 242.30769230769232
+          }
+        },
+        "SalariesTimesheetCreateResponse": {
+          "properties": {
+            "timesheetId": {
+              "type": "integer"
+            }
+          },
+          "example": {
+            "timesheetId": 58
+          }
+        },
+        "SalariesTimesheetCreate": {
+          "required": [
+            "project_id",
+            "month",
+            "year"
+          ],
+          "type": "object",
+          "properties": {
+            "project_id": {
+              "type": "string"
+            },
+            "month": {
+              "type": "integer"
+            },
+            "year": {
+              "type": "integer"
+            }
+          },
+          "example": {
+            "project_id": "107",
+            "month": 1,
+            "year": 2020
+          }
+        },
+        "ProjectsResponse": {
+          "required": [
+            "projects"
+          ],
+          "type": "object",
+          "properties": {
+            "projects": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "project": {
+                    "type": "string"
+                  },
+                  "projectId": {
+                    "type": "string"
+                  },
+                  "foremanName": {
+                    "type": "string"
+                  },
+                  "profit": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "example": {
+            "projects": [
+              {
+                "projectId": "1",
+                "foremanName": "Geraldine Moen",
+                "projectName": "minima",
+                "profit": "-27062.07"
+              }
+            ]
+          }
+        },
+        "SessionRequest": {
+          "required": [
+            "password",
+            "username"
+          ],
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          },
+          "example": {
+            "username": "Emil.Värnomasing",
+            "password": "test"
+          }
+        },
+        "SessionResponse": {
+          "required": [
+            "user"
+          ],
+          "type": "object",
+          "properties": {
+            "user": {
+              "required": [
+                "userId",
+                "username",
+                "employeeId",
+                "token",
+                "name",
+                "isAdmin"
+              ],
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "employeeId": {
+                  "type": "string"
+                },
+                "token": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "isAdmin": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "example": {
+            "user": {
+              "userId": "23",
+              "username": "Emil.Värnomasing",
+              "token": "9f8e22760d6a96881f9450ce4fb82e27",
+              "isAdmin": "1",
+              "name": "Emil Värnomasing"
+            }
+          }
+        },
+        "ErrorResponse": {
+          "required": [
+            "error"
+          ],
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "name": "Authorization",
+          "type": "apiKey",
+          "in": "header"
+        }
+      },
+      "responses": {
+        "UnauthorizedError": {
+          "description": "Access token is missing or invalid"
+        }
+      }
+    }
+  }
