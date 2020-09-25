@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const {registerValidation, loginValidation} = require('../validation');
 
-router.post('/register', async (req, res) => {
+router.post('/users', async (req, res) => {
     const {error} = registerValidation(req.body);
     // Lest validate the data before we a user
     if (error) return res.status(400).send(error.details[0].message);
@@ -34,7 +34,7 @@ router.post('/register', async (req, res) => {
 });
 
 // LogIn
-router.post('/login', async (req, res) => {
+router.post('/session', async (req, res) => {
     const {error} = loginValidation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     // Checking if the email exists
@@ -50,5 +50,5 @@ router.post('/login', async (req, res) => {
 
 
 })
-
+// Bankaccount
 module.exports = router;

@@ -22,7 +22,11 @@ const userSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
-    }
+    },
+    balance: {
+        type: String,
+        default:500
+    },
 
 });
 
