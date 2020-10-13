@@ -3,8 +3,7 @@ const app = express();
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 // Import Routes
-const authRoute = require('./routes/auth');
-const postRoute = require('./routes/posts');
+const routes = require('./routes');
 const swagger = require("./swagger");
 
 dotenv.config();
@@ -12,13 +11,12 @@ dotenv.config();
 // Connect to DB
 mongoose.connect(
     process.env.DB_CONNECT,
-    { useNewUrlParser: true },
+    { useNewUrlParser: true, useUnifiedTopology: true},
     () => console.log('connected to db!'));
 
 //Middleware
 app.use(express.json());
 // Route Middlewares
-app.use('/', authRoute);
-app.use('/', postRoute);
+app.use('/', routes);
 
 app.listen(3000, () => console.log('Server Up and running'));
