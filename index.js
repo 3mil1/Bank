@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 // Import Routes
 const routes = require('./routes');
 const swagger = require("./swagger");
+const {processTransactions} = require("./middlewares");
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ mongoose.connect(
     () => console.log('connected to db!'));
 
 //Middleware
+processTransactions();
 app.use(express.json());
 // Route Middlewares
 app.use('/', routes);

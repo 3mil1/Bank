@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const verify = require('./verifyToken.js');
-const User = require('./model/user');
+const User = require('./model/User');
+const Account = require('./model/Account')
+const Transaction = require('./model/Transaction')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { registerValidation, loginValidation } = require('./validation');
@@ -29,12 +31,19 @@ router.post('/users', async (req, res) => {
                             email: req.body.email,
                             password: hash
                         });
+                        const newAccount = new Account({ user: user._id});
                         user.save()
                             .then(result => {
                                 res.status(201).json({
                                     message: "User created"
                                 })
+                            }) 
+                             newAccount.save().then(result => {
+                                res.status(201).json({
+                                    message: "User created"
+                                })
                             })
+
                             .catch(err => {
                                 res.status(500).json({
                                     message: err.message
@@ -45,6 +54,7 @@ router.post('/users', async (req, res) => {
 
             }
         })
+       
 });
 
 // LogIn
@@ -63,7 +73,8 @@ router.post('/sessions', async (req, res, next) => {
         }
         if (result) {
            const token = jwt.sign({
-                userId: user.id
+                userId: user.id,
+                email: user.email
             }, process.env.TOKEN_SECRET,{
                 expiresIn: "1h"
             }
@@ -105,9 +116,67 @@ router.delete('/users/:userId', async (req, res, next) => {
 
 })
 // Transactions
-router.post('/transactions', async (req, res, next) => {
-    const accountFromObject = await accountModel.findOne({number: req.body})
-})
+router.post('/transactions', verify, async (req, res, next) => {
+    try {
+       
+        const {account_to, amount } = req.body;
+        const userAccount = await Account.findOne({
+           user: req.user.userId
+        });
+        console.log(req.user.userId);
+        const userEmail = await User.findOne({ _id:req.user.userId})
+        const acc = account_to.substring(0, 3);
+        //console.log(acc)
+        const accountTo = await Account.findOne({
+            account_number: account_to
+        });
+        const accountFrom = await Account.findOne({
+            account_number: userAccount.account_number
+        })
+        if(!accountTo) return res.status(400).json({
+            error: "Kontot ei leitud."
+        });
+        if(!req.body.explanation) return res.status(400).json({
+            error: "selgitus puudub"
+        })
+        if(amount > accountFrom.balance ) return res.status(400).json({error: "Teil pole piisavalt raha"})
+        if(typeof amount === 'string' || amount instanceof String) return res.status(400).json({error: "Palun sisesta arv.."});
+        if(account_to == userAccount.account_number) return res.status(400).json({message: "Ei saa saata endale!!!"});
+        await Transaction.create({
+            UserId: req.user.userId,
+            amount: req.body.amount,
+            currency: accountFrom.currency ,
+            accountFrom: accountFrom.account_number,
+            accountTo: req.body.account_to ,
+            explanation: req.body.explanation,
+            senderName: userEmail.email,
+            status: "pending" ,
+        });
+        console.log("Email" + userEmail.email);
+        console.log("Sent from " + accountFrom.account_number);
+        res.status(201).json({message:
+        "ülekanne tehtud"})
+ 
+    } catch (error) {
+        next(error);
+    }
+});
+    // Check destination bank
+    
+    // Refresh banks from central bank
+ 
+    // Check if there was an error
+ 
+     // Log the error to transaction
+ 
+    // If not...
+ 
+    // Try getting the details of the destination bank again
+ 
+    // Check for destination bank once more
+ 
+    // Make new transaction
+ 
 // Check Balance
 router.get('/balance', async (req, res, next) => {
 
