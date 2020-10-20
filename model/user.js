@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
 
 });
 
+const transactions = new mongoose.Schema({
+    
+})
+
 module.exports = mongoose.model('User', userSchema);
 
 

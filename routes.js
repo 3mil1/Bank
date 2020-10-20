@@ -105,6 +105,9 @@ router.delete('/users/:userId', async (req, res, next) => {
 
 })
 // Transactions
+router.post('/transactions', async (req, res, next) => {
+    const accountFromObject = await accountModel.findOne({number: req.body})
+})
 // Check Balance
 router.get('/balance', async (req, res, next) => {
 
